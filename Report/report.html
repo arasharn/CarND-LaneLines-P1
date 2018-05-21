@@ -5,7 +5,7 @@
 
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-<title>**Finding Lane Lines on the Road** </title>
+<title>report</title>
 
 
 <style type="text/css">
@@ -500,6 +500,8 @@ div.prism-show-language > div.prism-show-language-label {
 
 <body>
 
+<p><div style="text-align: justify"></p>
+
 <h1 id="toc_0"><strong>Finding Lane Lines on the Road</strong></h1>
 
 <h3 id="toc_1">Arash Nouri</h3>
@@ -521,37 +523,48 @@ div.prism-show-language > div.prism-show-language-label {
 
 <h3 id="toc_3">1. Describe your pipeline. As part of the description, explain how you modified the draw_lines() function.</h3>
 
-<p>The pipeline consists of 6 steps that each step was addressed by using the example in \ref{Figure1}</p>
+<h4 id="toc_4">An overview on the pipeline</h4>
 
-<p><a href="solidWhiteRight.jpg" title="Grayscale">image1</a># (image1)</p>
+<p>The pipeline consists of 5 steps that each step was addressed by using image in <a href="./solidWhiteRight.jpg" title="Raw image">Figure 1</a><br><br>
+<img src="./solidWhiteRight.jpg" alt="Figure 1" title="Raw image"></p>
 
 <ol>
-<li>sad</li>
+<li>First the image converted to grayscale by using <code>cv2.cvtColor</code>. Also, a gaussian noise kernel was applied to the image to reduce the noise of the images and helps to detect the edges better (<a href="./gray_solidWhiteRight.jpg" title="Grayscale">Figure 2</a>).<br>
+<img src="./gray_solidWhiteRight.jpg" alt="Figure 2" title="Grayscale"></li>
+<li> In the next step, an edge detectio analysis was done by using the Canny algorithm (<code>cv2.Canny</code>) on the <a href="./gray_solidWhiteRight.jpg" title="Grayscale">Figure 2</a>. The result is shown in <a href="./edges_solidWhiteRight.jpg" title="Edges">Figure 3</a>.
+<img src="./edges_solidWhiteRight.jpg" alt="Figure 3" title="Edges"></li>
+<li>To improved the results and prune unwanted edges, a mask was define. It should be noted that for defining the mask it was assumed that camera location is constatnt and <code>cv2.fillPoly</code> was used for defining the masked area. <a href="./target_solidWhiteRight.jpg" title="Masking">Figure 4</a> shows the results after the mask.<br>
+<img src="./target_solidWhiteRight.jpg" alt="Figure 4" title="Masking"><br>
+It should be mentioned, for definng the mask easier the mask was also plotted on the image (<a href="./masked_region.png" title="Masked region">Figure 5</a>). This plot helps alot for defining a suitable windows for images.<br>
+<img src="./masked_region.png" alt="Figure 5" title="Masked region"></li>
+<li>In the \(4^{th}\) step, Hough line transform was used to draw line that pass through all the hough line. <code>cv2.HoughLinesP</code> was used for this task. </li>
+<li>Finally in the last step, the results of hough transform lines was blended with the orginal image (<a href="./output_solidWhiteCurve.jpg" title="Output">Figure 6</a>) by using <code>cv2.addWeighted</code> function.<br>
+<img src="./output_solidWhiteCurve.jpg" alt="Figure 6" title="Output"></li>
 </ol>
 
-<p>My pipeline consisted of 5 steps. First, I converted the images to grayscale, then I &hellip;. </p>
+<h4 id="toc_5">Improve <code>draw_lines</code> function</h4>
 
-<p>In order to draw a single line on the left and right lanes, I modified the draw_lines() function by &hellip;</p>
+<p>This function works base don the outout of the out out of the Hough transofrom. For making this function better to give a overall line in noth right nd left sides: </p>
 
-<p>If you&rsquo;d like to include images to show how the pipeline works, here is how to include an image: </p>
+<ol>
+<li>first starting and finishing coordinates of each lines were extracted</li>
+<li>Then  the slope and the center of each lines were calculated</li>
+<li>The points, their slopes, and their centers were grouped based on the values of their slope to right and left side ccordinates. In fact, if the value of the slope is negative and small the line was in the left side and whenever the slope values are posetive and small the line belongs to the right hand side fo the road. A threshhold was defined here for bothe negative and posetive slopes to rempve the vertical, orizental, or any line with large slope from the line. This threshhold helps the algorythm to have cleanear and more robust outputs</li>
+<li>Next, maximum and minimum \(y\)s from each side were extracted and by using the average slopes and averaged center coordinates of each side their \(x\) values were calculated.</li>
+<li>Finally two lines will be drawn in each side of the road by using the caluculated maximum and minimum  coordinates from previous step </li>
+</ol>
 
-<p><img src="solidWhiteRight.jpg" alt="alt text" title="Grayscale"></p>
+<h3 id="toc_6">2. Identify potential shortcomings with your current pipeline</h3>
 
-<h3 id="toc_4">2. Identify potential shortcomings with your current pipeline</h3>
+<p>One potential shortcoming would be what would happen when there is a curve in the video. In the current version the maximum height was chosen carefully to avoid this problem. But for more advanced version a curve drawing function can be defined to avoid this problem. </p>
 
-<p>One potential shortcoming would be what would happen when &hellip; </p>
+<p>As mentioned previously, another shortcoming is the fact that the maximum height in masking function was chosen carefully but it might cause problem for more complicated road or vehicle with higher velocities</p>
 
-<p>Another shortcoming could be &hellip;</p>
+<h3 id="toc_7">3. Suggest possible improvements to your pipeline</h3>
 
-<h3 id="toc_5">3. Suggest possible improvements to your pipeline</h3>
+<p>A possible improvement would be to define a function to draw curve line instead of the straight line for the more curvy roads.</p>
 
-<p>A possible improvement would be to &hellip;</p>
-
-<p>Another potential improvement could be to &hellip;</p>
-
-<p>![Alt text][(]solidWhiteRight.jpg)</p>
-
-<p>A reference to the <a href="#image">image</a></p>
+<p>Another potential improvement could be to tune the edge detector and hough transfor line functions. Thus, the maxmimum height of the mask can be increased to cover the roads completely to its end.</p>
 
 
 
