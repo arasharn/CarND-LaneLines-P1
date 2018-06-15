@@ -5,15 +5,6 @@
 ### Arash Nouri
 
 ---
-[//]: # (Image References)
-
-[Fig1]: ./solidWhiteRight.jpg "Raw image"
-[Fig2]: ./gray_solidWhiteRight.jpg "Grayscale"
-[Fig3]: ./edges_solidWhiteRight.jpg "Edges"
-[Fig4]: ./target_solidWhiteRight.jpg "Masking"
-[Fig5]: ./masked_region.png "Masked region"
-[Fig6]: ./output_solidWhiteCurve.jpg "Output"
-
 **Finding Lane Lines on the Road**
 
 The goals / steps of this project are the following:
