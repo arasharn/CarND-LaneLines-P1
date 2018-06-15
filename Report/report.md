@@ -1,5 +1,7 @@
 <div style="text-align: justify">   
+
 # **Finding Lane Lines on the Road**    
+
 ### Arash Nouri
 
 ---
